@@ -12,17 +12,8 @@
 </head>
 <body>
 
-<div id="map">
-    <button class="btn btn-primary d-flex align-items-end">Add pin</button>
-</div>
-<div class="chat-wrapper">
-    <div id="message-box"></div>
-    <div class="user-panel">
-        <input type="text" name="name" id="name" placeholder="Your Name" maxlength="15" />
-        <input type="text" name="message" id="message" placeholder="Type your message here..." maxlength="100" />
-        <button id="send-message">Send</button>
-    </div>
-</div>
+<div id="map"></div>
+<div class="chat-wrapper" hidden></div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
         integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
