@@ -18,7 +18,6 @@ const tiles = new L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}
 function onMapClick(e) {
   const pin = L.marker(e.latlng).addTo(map);
   pin.bindPopup('Chatroom ' + pin._leaflet_id).openPopup();
-  console.log('on map click start server');
   startServer(pin);
 }
 
@@ -37,24 +36,24 @@ function startServer(pin) {
   const pinID = pin._leaflet_id;
 
   let msgBox = $('#message-box-' + pinID);
-  msgBox.append('<div class="system_msg" style="color:#bbbbbb; text-align: center">Chatroom ' + pinID + '!</div>'); //Notify user
+  msgBox.append('<div class="system_msg" style="color:#bbbbbb; text-align: center">Chatroom ' + pinID + '</div>'); //Notify user
 
 //Message received from server
   websocket.onmessage = function(ev) {
     let response 		= JSON.parse(ev.data); //PHP sends Json data
 
-    let res_type 		= response.type; //Message type
-    let user_message 	= response.message; //Message text
-    let user_name 		= response.name; //User name
-    let chat_id         = response.chat_id;
-    msgBox = $('#message-box-' + chat_id);
+    let resType 		= response.type; //Message type
+    let userMessage 	= response.message; //Message text
+    let userName 		= response.name; //User name
+    let chatId         = response.chat_id;
+    msgBox = $('#message-box-' + chatId);
 
-    switch(res_type){
+    switch(resType){
       case 'usermsg':
-        msgBox.append('<div><span class="user-name" id="user-name-' + chat_id + '">' + user_name + '</span> : <span class="user-message" id="user-message- ' + chat_id + ' ">' + user_message + '</span></div>');
+        msgBox.append('<div><span class="user-name" id="user-name-' + chatId + '">' + userName + '</span> : <span class="user-message" id="user-message- ' + chatId + ' ">' + userMessage + '</span></div>');
         break;
       case 'system':
-        msgBox.append('<div style="color:#bbbbbb">' + user_message + '</div>');
+        msgBox.append('<div style="color:#bbbbbb">' + userMessage + '</div>');
         break;
     }
     msgBox[0].scrollTop = msgBox[0].scrollHeight; //Scroll message
@@ -77,29 +76,28 @@ function startServer(pin) {
 
 //Send message
   function sendMessage(pinID){
-    console.log(pinID);
-    const message_input = $('#message-' + pinID); //User message text
-    const name_input = $('#name-' + pinID); //User name
+    const messageInput = $('#message-' + pinID); //User message text
+    const nameInput = $('#name-' + pinID); //User name
 
-    if(name_input.val() == ""){ //Empty name?
+    if(nameInput.val() == ""){ //Empty name?
       alert("Enter your Name please!");
       return;
     }
-    if(message_input.val() == ""){ //Empty message?
+    if(messageInput.val() == ""){ //Empty message?
       alert("Enter Some message Please!");
       return;
     }
 
     //Prepare json data
     const msg = {
-      message: message_input.val(),
-      name: name_input.val(),
+      message: messageInput.val(),
+      name: nameInput.val(),
       chat_id: pinID
     };
 
     //convert and send data to server
     websocket.send(JSON.stringify(msg));
-    message_input.val(''); //Reset message input
+    messageInput.val(''); //Reset message input
 
   }
 }
@@ -115,11 +113,11 @@ map.on('popupopen', function(e) {
 
 //Create new chat if not exist
   if($('#message-box-' + pinID).length == 0){
-    $('.chat-wrapper').append('<div class="message-box" id="message-box-' + pin._leaflet_id + '" ></div>\n' +
-      '    <div class="user-panel" id="user-panel-' + pin._leaflet_id + '">\n' +
-      '        <input type="text" name="name" class="name" id="name-' + pin._leaflet_id + '" placeholder="Your Name" maxlength="15" />\n' +
-      '        <input type="text" name="message" class="message" id="message-' + pin._leaflet_id + '" placeholder="Type your message here..." maxlength="100" />\n' +
-      '        <button class="send-message" id="send-message-' + pin._leaflet_id + '">Send</button>\n' +
+    $('.chat-wrapper').append('<div class="message-box" id="message-box-' + pinID + '" ></div>\n' +
+      '    <div class="user-panel" id="user-panel-' + pinID + '">\n' +
+      '        <input type="text" name="name" class="name" id="name-' + pinID + '" placeholder="Your Name" maxlength="15" />\n' +
+      '        <input type="text" name="message" class="message" id="message-' + pinID + '" placeholder="Type your message here..." maxlength="100" />\n' +
+      '        <button class="send-message" id="send-message-' + pinID + '">Send</button>\n' +
       '    </div>');
   }
 });
